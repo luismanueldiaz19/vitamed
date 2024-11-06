@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "356117566040",
+    "project_id": "vitamedd",
+    "storage_bucket": "vitamedd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:356117566040:android:662b78536db8640486f02d",
+        "android_client_info": {
+          "package_name": "com.example.vitamed"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC19RnkX29STGxH0Ub310X-BQlht31yPSE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
