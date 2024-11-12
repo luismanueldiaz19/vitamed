@@ -1,7 +1,7 @@
 // specialization_list_widget
 
 import 'package:flutter/material.dart';
-import 'package:vitamed/src/screens/folder_screen_main/widget/specialization_card.dart';
+import 'package:vitamed/src/widget/specialization_card.dart';
 
 class SpecializationsList extends StatelessWidget {
   @override

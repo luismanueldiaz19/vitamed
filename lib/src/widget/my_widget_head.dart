@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../../utils/constants.dart';
-import '../../../utils/helpers.dart';
+import '../utils/constants.dart';
+import '../utils/helpers.dart';
 
 class MyWidgetHead extends StatelessWidget {
   const MyWidgetHead({super.key, this.currenUser});

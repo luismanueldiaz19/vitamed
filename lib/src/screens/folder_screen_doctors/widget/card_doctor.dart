@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:vitamed/src/screens/folder_screen_doctors/screen_details_doctor.dart';
 
 import '../../../models/doctor.dart';
+import '../../../providers/provider_doctor.dart';
 
 class DoctorCard extends StatefulWidget {
   final Doctor doctor;
@@ -15,18 +16,23 @@ class DoctorCard extends StatefulWidget {
 }
 
 class _DoctorCardState extends State<DoctorCard> {
-  late bool isFavorite;
+  bool isFavorite = false;
 
   @override
   void initState() {
     super.initState();
-    isFavorite = widget.doctor.isFavorite ?? false;
+    // isFavorite = widget.doctor.isFavorite ?? false;
   }
 
-  void toggleFavorite() {
+  void toggleFavorite() async {
     setState(() {
       isFavorite = !isFavorite;
     });
+
+    if (isFavorite) {
+      await Provider.of<ProviderDoctor>(context, listen: false)
+          .addDoctorFavorite(widget.doctor.toJson());
+    }
   }
 
   @override
@@ -51,17 +57,34 @@ class _DoctorCardState extends State<DoctorCard> {
             },
             child: Stack(
               children: [
+                // CircleAvatar(
+                //   backgroundImage:
+                //       NetworkImage(widget.doctor.imageProfile ?? ''),
+                //   radius: 30.0,
+                // ),
                 // Imagen de doctor
                 Hero(
                   tag: widget.doctor.id.toString(),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      widget.doctor.imageProfile ?? 'N/A',
+                    child: SizedBox(
                       height: 150,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
+                      child: CachedNetworkImage(
+                        imageUrl: widget.doctor.imageProfile ?? 'N/A',
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      ),
                     ),
+
+                    // Image.network(
+                    //   widget.doctor.imageProfile ?? 'N/A',
+                    //   height: 150,
+                    //   width: double.infinity,
+                    //   fit: BoxFit.cover,
+                    // ),
                   ),
                 ),
                 Positioned(
@@ -88,7 +111,7 @@ class _DoctorCardState extends State<DoctorCard> {
                     Icon(Icons.star, color: Colors.amber, size: 16),
                     SizedBox(width: 4),
                     Text(
-                      widget.doctor.star ?? '0',
+                      widget.doctor.star.toString(),
                       style: TextStyle(fontSize: 14),
                     ),
                     SizedBox(width: 4),

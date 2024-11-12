@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 
 class LoadingCustom extends StatelessWidget {
   const LoadingCustom(
-      {super.key, this.text = 'Verificando ......', this.isLoading = true});
+      {super.key,
+      this.text = 'Verificando ......',
+      this.isLoading = true,
+      this.image = 'assets/imagen/sin-datos.png'});
   final String? text;
   final bool isLoading;
+  final String? image;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +20,9 @@ class LoadingCustom extends StatelessWidget {
         children: [
           ElasticIn(
               curve: Curves.elasticInOut,
-              child: Image.asset('assets/imagen/sin-datos.png', scale: 5)),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(150),
+                  child: Image.asset(image!, scale: 5))),
           SlideInLeft(
               curve: Curves.elasticInOut, child: Text(text ?? 'No hay datos')),
         ],

@@ -37,9 +37,15 @@ class CardConsultation extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                doctorName,
-                style: style.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              Tooltip(
+                message: doctorName.toUpperCase(),
+                child: Text(
+                  doctorName.length > 25
+                      ? '${doctorName.substring(0, 25)}...'
+                      : doctorName,
+                  style:
+                      style.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                ),
               ),
               const SizedBox(height: 4.0),
               Text(specialty,

@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vitamed/src/providers/provider_doctor.dart';
 import 'package:vitamed/src/utils/helpers.dart';
+import 'package:vitamed/src/widgets/loading.dart';
 
 import '../../models/doctor.dart';
 import '../../utils/constants.dart';
+import '../../widget/specialization_list_widget.dart';
+import '../../widget/widget_dividores.dart';
 import 'widget/card_doctor.dart';
 
 class ScreenDoctorMain extends StatefulWidget {
@@ -469,7 +472,11 @@ class _ScreenDoctorMainState extends State<ScreenDoctorMain> {
         ],
       ),
       CustomTextField(
-          icon: Icons.search, labelText: 'Buscar', onChanged: (value) {}),
+          icon: Icons.search,
+          labelText: 'Buscar',
+          onChanged: (filter) => providerData.searchingDoctor(filter)),
+      MyWidgetDivisores(onPressed: () {}, title: 'Specializations'),
+      Expanded(child: SpecializationsList()),
       // TextButton(
       //     onPressed: () async {
       //       // final doctor = {
@@ -556,17 +563,18 @@ class _ScreenDoctorMainState extends State<ScreenDoctorMain> {
       //       ),
 
       doctorList.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? Expanded(
+              child: Center(
+                  child: LoadingCustom(text: 'No hay datos', isLoading: false)))
           : Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 8,
-                    mainAxisSpacing: 8,
-                    childAspectRatio: 9 / 16,
-                  ),
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 0,
+                      childAspectRatio: 9 / 16),
                   itemCount: doctorList.length,
                   itemBuilder: (context, index) {
                     Doctor item = doctorList[index];

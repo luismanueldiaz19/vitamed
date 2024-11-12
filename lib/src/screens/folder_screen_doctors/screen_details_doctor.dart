@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -31,14 +32,16 @@ class _ScreenDetailDoctorState extends State<ScreenDetailDoctor> {
             child: Container(
               child: Stack(
                 children: [
-                  Image.network(
-                    widget.doctor!.imageProfile ?? 'N/A',
+                  CachedNetworkImage(
+                    imageUrl: widget.doctor!.imageProfile ?? 'N/A',
                     width: double.infinity,
                     fit: BoxFit.cover,
                     height: 250,
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                   Positioned(
-                    top: kToolbarHeight,
+                    top: kToolbarHeight / 2,
                     left: 15,
                     child: Align(
                       alignment: Alignment.topLeft,
@@ -50,24 +53,24 @@ class _ScreenDetailDoctorState extends State<ScreenDetailDoctor> {
                       ),
                     ),
                   ),
-                  Positioned(
-                    top: kToolbarHeight,
-                    right: 15,
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          widget.doctor!.isFavorite!
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: widget.doctor!.isFavorite!
-                              ? Colors.red
-                              : Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Positioned(
+                  //   top: kToolbarHeight,
+                  //   right: 15,
+                  //   child: Align(
+                  //     alignment: Alignment.topLeft,
+                  //     child: IconButton(
+                  //       onPressed: () {},
+                  //       icon: Icon(
+                  //         widget.doctor!.isFavorite!
+                  //             ? Icons.favorite
+                  //             : Icons.favorite_border,
+                  //         color: widget.doctor!.isFavorite!
+                  //             ? Colors.red
+                  //             : Colors.white,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -85,7 +88,7 @@ class _ScreenDetailDoctorState extends State<ScreenDetailDoctor> {
                         Icon(Icons.star, color: Colors.amber, size: 16),
                         SizedBox(width: 4),
                         Text(
-                          widget.doctor!.star ?? '0',
+                          widget.doctor!.star.toString(),
                           style: TextStyle(fontSize: 14),
                         ),
                         SizedBox(width: 4),

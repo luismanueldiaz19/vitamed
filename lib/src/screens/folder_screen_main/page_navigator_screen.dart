@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vitamed/src/providers/provider_citas.dart';
 import 'package:vitamed/src/screens/folder_profile/screen_profiles.dart';
+import 'package:vitamed/src/screens/folder_screen_doctors/screen_doctor_favorite.dart';
 import 'package:vitamed/src/screens/folder_screen_main/home_screen.dart';
 
 import '../folder_screen_doctors/screen_doctor_main.dart';
@@ -18,7 +21,7 @@ class _PageNavigatorScreenState extends State<PageNavigatorScreen> {
   final List<Widget> _pages = [
     MyHomePage(title: 'Vitamed'),
     ScreenDoctorMain(),
-    Center(child: Text('Favorites Screen')),
+    ScreenDoctorFavorite(),
     ScreenProfiles(),
   ];
 
@@ -29,6 +32,7 @@ class _PageNavigatorScreenState extends State<PageNavigatorScreen> {
     });
   }
 
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(

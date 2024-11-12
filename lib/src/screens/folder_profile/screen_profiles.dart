@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:vitamed/src/screens/folder_screen_doctors/add_doctor_register.dart';
 import 'package:vitamed/src/screens/splash_screen.dart';
 import 'package:vitamed/src/utils/helpers.dart';
 
@@ -97,7 +98,7 @@ class _ScreenProfilesState extends State<ScreenProfiles> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: kTextTabBarHeight),
+            SizedBox(height: kToolbarHeight / 2),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: SizedBox(
@@ -193,6 +194,14 @@ class _ScreenProfilesState extends State<ScreenProfiles> {
                 ],
               ),
             ),
+            TextButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddDoctorRegister()));
+                },
+                child: Text('Registrar doctor')),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

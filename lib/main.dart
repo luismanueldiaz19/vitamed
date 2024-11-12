@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:vitamed/src/providers/provider_citas.dart';
 import 'package:vitamed/src/screens/splash_screen.dart';
 import 'firebase_options.dart';
 import 'src/providers/provider_doctor.dart';
@@ -15,11 +16,12 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ProviderDoctor()),
+        ChangeNotifierProvider(create: (_) => ProviderCita()),
         // ChangeNotifierProvider(create: (_) => RentaCarProvider()),
         // ChangeNotifierProvider(create: (_) => PrestamoProvider()),
         // ChangeNotifierProvider(create: (_) => ProjectEarthProvider()),
-        //ProjectEarthProvider
-        //RentaCarProvider
+        // ProjectEarthProvider
+        // RentaCarProvider
       ],
       child: const MyApp(),
     ),

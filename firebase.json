@@ -1,1 +1,31 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"vitamedd","appId":"1:356117566040:android:662b78536db8640486f02d","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"vitamedd","configurations":{"android":"1:356117566040:android:662b78536db8640486f02d","ios":"1:356117566040:ios:91c6d55c2a80a3ac86f02d","web":"1:356117566040:web:0504ade43eb6ec2286f02d"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "vitamedd",
+          "appId": "1:356117566040:android:662b78536db8640486f02d",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "vitamedd",
+          "configurations": {
+            "android": "1:356117566040:android:662b78536db8640486f02d",
+            "ios": "1:356117566040:ios:91c6d55c2a80a3ac86f02d",
+            "web": "1:356117566040:web:0504ade43eb6ec2286f02d"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

@@ -4,8 +4,8 @@ import 'widget_not_screen.dart';
 class ValidarScreenAvailable extends StatelessWidget {
   const ValidarScreenAvailable(
       {super.key,
-      required this.windows,
-      this.mobile = const NotScreenWidget()});
+      this.windows = const NotScreenWidget(),
+      required this.mobile});
   final Widget windows;
   final Widget? mobile;
 

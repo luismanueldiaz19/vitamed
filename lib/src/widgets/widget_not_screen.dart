@@ -8,8 +8,8 @@ class NotScreenWidget extends StatelessWidget {
     final style = Theme.of(context).textTheme;
     return Center(
       child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Image.asset('imagen/tamano-de-la-pantalla.png', scale: 4),
-        Text('Pantalla no disponible', style: style.titleSmall),
+        Image.asset('assets/imagen/tamano-de-la-pantalla.png', scale: 4),
+        Text('Pantalla en desarrollo', style: style.titleSmall),
         Text('para ver la información expandir la pantalla',
             style: style.bodySmall)
       ]),
