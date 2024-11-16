@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vitamed/src/screens/folder_appoitment/detail_citas.dart';
 import 'package:vitamed/src/widget/card_consultation.dart';
 import 'package:vitamed/src/widget/widget_dividores.dart';
+import 'package:vitamed/src/widgets/loading.dart';
 import '../../models/cita.dart';
 import '../../providers/provider_citas.dart';
 import '../../services/auth_service.dart';
@@ -43,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           SizedBox(height: kToolbarHeight),
           MyWidgetHead(currenUser: _authService.currentUser),
-          MyWidgetDivisores(onPressed: () {}, title: 'Next Consultation'),
+          MyWidgetDivisores(onPressed: () {}, title: 'Próxima consulta'),
           StreamBuilder<List<Cita>>(
             stream: citaProvider.citasStream,
             builder: (context, snapshot) {
@@ -52,7 +53,12 @@ class _MyHomePageState extends State<MyHomePage> {
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error al cargar las citas.'));
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Center(child: Text('No hay citas disponibles.'));
+                return Expanded(
+                    child: Center(
+                        child: LoadingCustom(
+                  text: 'No hay citas disponibles.',
+                  image: 'assets/imagen/wired.gif',
+                )));
               }
 
               final citas = snapshot.data!;
@@ -105,7 +111,6 @@ class _MyHomePageState extends State<MyHomePage> {
           // CardConsultation(imageUrl: urlDocto),
           // const SizedBox(height: 10),
           // CardConsultation(imageUrl: otherDocto),
-         
         ],
       ),
     );

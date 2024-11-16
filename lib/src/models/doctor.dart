@@ -41,7 +41,7 @@ class Doctor {
         telefono: data['telefono'] ?? '',
         imageProfile: data['image_profile'] ?? '',
         informacion: data['informacion'] ?? '',
-        star: data['star'] ?? 0.0,
+        star: data['star'] != null ? data['star'] ?? 0.0 : 0.0,
         isFavorite: data['is_favorite'],
         exequarter: data['exequarter'],
         seguros: List<String>.from(data['seguros'] ?? []));

@@ -25,17 +25,11 @@ class MyWidgetDivisores extends StatelessWidget {
             onPressed: onPressed,
             child: Row(
               children: [
-                Text(
-                  'View all',
-                  style: fontBody?.copyWith(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.bold,
-                      ) ??
-                      style.bodyMedium?.copyWith(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
+                Text('Ver todos',
+                    style: fontBody.copyWith(
+                      color: Colors.black54,
+                      fontWeight: FontWeight.bold,
+                    )),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: Icon(

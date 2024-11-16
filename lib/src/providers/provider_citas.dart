@@ -40,13 +40,5 @@ class ProviderCita extends ChangeNotifier {
         return Cita.fromJson(citaData)..id = entry.key;
       }).toList();
     });
-
-    // return _citasRef.onValue.map((event) {
-    //   final citasMap = event.snapshot.value as Map<dynamic, dynamic>? ?? {};
-    //   return citasMap.entries.map((entry) {
-    //     final citaData = Map<String, dynamic>.from(entry.value);
-    //     return Cita.fromJson(citaData)..id = entry.key;
-    //   }).toList();
-    // });
   }
 }

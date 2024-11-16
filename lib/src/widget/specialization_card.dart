@@ -19,6 +19,7 @@ class SpecializationCard extends StatelessWidget {
     final style = Theme.of(context).textTheme;
 
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
           color: Colors.grey.shade200,
           borderRadius: BorderRadius.all(Radius.circular(5))),
@@ -29,13 +30,15 @@ class SpecializationCard extends StatelessWidget {
           const SizedBox(height: 8.0),
           Text(
             specializationName,
-            style: style.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+            style: style.titleSmall
+                ?.copyWith(fontWeight: FontWeight.bold, fontSize: 10),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 4.0),
           Text(
             '$doctorCount Doctores',
-            style: style.bodySmall?.copyWith(color: Colors.black54),
+            style:
+                style.bodySmall?.copyWith(color: Colors.black54, fontSize: 10),
           ),
         ],
       ),

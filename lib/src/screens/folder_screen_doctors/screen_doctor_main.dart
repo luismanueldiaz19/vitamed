@@ -20,7 +20,6 @@ class ScreenDoctorMain extends StatefulWidget {
 class _ScreenDoctorMainState extends State<ScreenDoctorMain> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -475,8 +474,8 @@ class _ScreenDoctorMainState extends State<ScreenDoctorMain> {
           icon: Icons.search,
           labelText: 'Buscar',
           onChanged: (filter) => providerData.searchingDoctor(filter)),
-      MyWidgetDivisores(onPressed: () {}, title: 'Specializations'),
-      Expanded(child: SpecializationsList()),
+      MyWidgetDivisores(onPressed: () {}, title: 'Especializaciones'),
+      SpecializationsList(),
       // TextButton(
       //     onPressed: () async {
       //       // final doctor = {
