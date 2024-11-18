@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:vitamed/src/models/usuario.dart';
+import '../permission/permission_device.dart';
 import '../services/auth_service.dart';
 import '../utils/constants.dart';
 import 'folder_screen_main/home_screen.dart';
@@ -15,10 +19,17 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   AuthService authService = AuthService();
+  PermissionMethonds permissionMethonds = PermissionMethonds();
+
   @override
   void initState() {
     super.initState();
     _checkAuthentication();
+    permission();
+  }
+
+  permission() async {
+    await permissionMethonds.askPermissionNotificacion();
   }
 
   // Método para revisar si el usuario está autenticado
@@ -26,11 +37,12 @@ class _SplashScreenState extends State<SplashScreen> {
     bool isAuthenticated = await authService.isUserLoggedIn();
     // Simulamos un pequeño retraso para que el splash sea visible por un tiempo
     await Future.delayed(const Duration(seconds: 2));
-
-    print('isAuthenticated : $isAuthenticated');
-
+    // print('isAuthenticated : $isAuthenticated');
     if (isAuthenticated) {
       authService.getUserId();
+      final usuariLocal = await authService.getUsuario();
+      currentUsuario = Usuario.fromJson(json.decode(usuariLocal!));
+      print('usuario de preferencia ${currentUsuario?.toJson()}');
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => PageNavigatorScreen()),

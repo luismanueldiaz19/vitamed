@@ -59,13 +59,13 @@ class ProviderDoctor extends ChangeNotifier {
 
     if (snapshot.value != null) {
       // Convierte el mapa en una lista
-      final Map<dynamic, dynamic> data =
-          snapshot.value as Map<dynamic, dynamic>;
+      final Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
 
       print('data : ${jsonEncode(data)}');
 
       _doctorList = data.entries.map((entry) {
         // entry.key es el ID
+        
         return Doctor.fromMap(
             entry.key as String, entry.value as Map<dynamic, dynamic>);
       }).toList();

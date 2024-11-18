@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:vitamed/src/permission/permission_device.dart';
 import 'package:vitamed/src/providers/provider_citas.dart';
+import 'package:vitamed/src/providers/provider_usuario.dart';
 import 'package:vitamed/src/screens/splash_screen.dart';
 import 'firebase_options.dart';
 import 'src/providers/provider_doctor.dart';
 import 'src/providers/provider_recetas.dart';
+import 'src/services/firebase_api.dart';
 import 'src/utils/constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseApi().initNotifications();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ProviderDoctor()),
         ChangeNotifierProvider(create: (_) => ProviderCita()),
         ChangeNotifierProvider(create: (_) => ProviderRecetas()),
-        // ChangeNotifierProvider(create: (_) => PrestamoProvider()),
+        ChangeNotifierProvider(create: (_) => providerUsuario()),
         // ChangeNotifierProvider(create: (_) => ProjectEarthProvider()),
         // ProjectEarthProvider
         // RentaCarProvider

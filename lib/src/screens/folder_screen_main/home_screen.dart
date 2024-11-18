@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vitamed/src/screens/folder_appoitment/detail_citas.dart';
+import 'package:vitamed/src/screens/folder_appoitment/historial_cita.dart';
 import 'package:vitamed/src/widget/card_consultation.dart';
 import 'package:vitamed/src/widget/widget_dividores.dart';
 import 'package:vitamed/src/widgets/loading.dart';
@@ -44,7 +45,17 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           SizedBox(height: kToolbarHeight),
           MyWidgetHead(currenUser: _authService.currentUser),
-          MyWidgetDivisores(onPressed: () {}, title: 'Próxima consulta'),
+          MyWidgetDivisores(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HistorialCita()),
+              );
+            },
+            title: 'Próxima consulta',
+            text: 'Historial',
+            icon: Icons.calendar_month_outlined,
+          ),
           StreamBuilder<List<Cita>>(
             stream: citaProvider.citasStream,
             builder: (context, snapshot) {
@@ -54,11 +65,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 return Center(child: Text('Error al cargar las citas.'));
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return Expanded(
-                    child: Center(
-                        child: LoadingCustom(
-                  text: 'No hay citas disponibles.',
-                  image: 'assets/imagen/wired.gif',
-                )));
+                  child: Center(
+                    child: LoadingCustom(
+                      text: 'No hay citas disponibles.',
+                      image: 'assets/imagen/wired.gif',
+                    ),
+                  ),
+                );
               }
 
               final citas = snapshot.data!;

@@ -1,6 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:vitamed/src/widgets/loading.dart';
@@ -20,8 +19,13 @@ class DetailCita extends StatefulWidget {
 class _DetailCitaState extends State<DetailCita> {
   // Controladores para los TextFields
   final TextEditingController _indicacionesController = TextEditingController();
-  final TextEditingController _frecuenciaController = TextEditingController();
-  final TextEditingController _cantidadDiasController = TextEditingController();
+  // ------------------------------------------------
+  final TextEditingController _motivoConsultaController =
+      TextEditingController();
+  final TextEditingController _analisisController = TextEditingController();
+  // final TextEditingController _cantidadDiasController = TextEditingController();
+  // final TextEditingController _cantidadDiasController = TextEditingController();
+
   File? _imageFile;
   String? _imageUrl;
   double _uploadProgress = 0.0; // Variable de estado para el progreso
@@ -31,7 +35,6 @@ class _DetailCitaState extends State<DetailCita> {
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
-
     // Mostrar diálogo para elegir entre Cámara o Galería
     await showDialog(
       context: context,
@@ -118,13 +121,14 @@ class _DetailCitaState extends State<DetailCita> {
   agregarIndicacion() async {
     final DatabaseReference _recetaRef =
         FirebaseDatabase.instance.ref().child('recetas');
+    final DatabaseReference _historialMedicoRef =
+        FirebaseDatabase.instance.ref().child('historial_medicos');
 
     final DatabaseReference recetaRef =
         FirebaseDatabase.instance.ref().child('citas').child(widget.cita!.id!);
 
     if (_indicacionesController.text.isEmpty ||
-        _frecuenciaController.text.isEmpty ||
-        _cantidadDiasController.text.isEmpty) {
+        _motivoConsultaController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Error Fomulario'),
@@ -138,8 +142,8 @@ class _DetailCitaState extends State<DetailCita> {
       isLoading = !isLoading;
       data['created_at'] = DateTime.now().toString().substring(0, 19);
       data['indicaciones'] = _indicacionesController.text;
-      data['frecuencia'] = _frecuenciaController.text;
-      data['cantidad_dias'] = _cantidadDiasController.text;
+      // data['frecuencia'] = _frecuenciaController.text;
+      // data['cantidad_dias'] = _cantidadDiasController.text;
       data['doctor_id'] = widget.cita!.doctorId;
       data['path_imagen'] = _imageUrl != null ? _imageUrl : 'N/A';
       data['name_doctor'] = widget.cita!.nameDoctor;
@@ -150,9 +154,41 @@ class _DetailCitaState extends State<DetailCita> {
       data['date_cita'] = widget.cita!.date;
       data['statu'] = 'activo';
       data['resultado'] = 'tratamiento en espera..';
+      data['citaId'] = widget.cita?.id;
     });
     print('Datos guardados: $data');
+    Map<String, dynamic> historialMedico = {
+      'usuarioId': currentUsuario?.usuarioId,
+      'nombre': currentUsuario?.nombre,
+      'edad': currentUsuario?.edad,
+      'sexo': currentUsuario?.sexo,
+      'telefono': currentUsuario?.telefono,
+      'direccion': currentUsuario?.direccion,
+      'motivoConsulta': _motivoConsultaController.text,
+      'doctor_id': widget.cita!.doctorId,
+      'citaId': widget.cita?.id,
+      'created_at': DateTime.now().toString().substring(0, 19),
+      'pruebasSolicitadas': _analisisController.text.isNotEmpty
+          ? _analisisController.text.split(',').map((e) => e.trim()).toList()
+          : [
+              'Sin analisis',
+            ],
+      'antecedentes': {
+        'enfermedadesPrevias': 'Ninguna',
+        'medicacionActual': 'No hay datos'
+      },
+      'examenFisico': {
+        'presionArterial': '0/0 mmHg',
+        'temperatura': 'sin datos °C',
+        'frecuenciaCardiaca': 'sin datos'
+      },
+      'diagnostico': 'aun sin datos',
+      'tratamiento': _indicacionesController.text,
+      'seguimiento': 'Aun no publicado',
+    };
     await _recetaRef.push().set(data);
+    await _historialMedicoRef.push().set(historialMedico);
+
     print("Doctor added successfully!"); // Realizar la actualización del estado
     await recetaRef.update({'is_availablre': false});
 
@@ -195,6 +231,11 @@ class _DetailCitaState extends State<DetailCita> {
                       Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Image.network(_imageUrl!)),
+                    TextField(
+                        controller: _motivoConsultaController,
+                        keyboardType: TextInputType.text,
+                        decoration: const InputDecoration(
+                            labelText: 'Motivo de consulta')),
                     // Campo para indicaciones
                     TextField(
                       controller: _indicacionesController,
@@ -204,38 +245,48 @@ class _DetailCitaState extends State<DetailCita> {
                         data['indicaciones'] = value;
                       },
                     ),
-                    // Campo para frecuencia
                     TextField(
-                      controller: _frecuenciaController,
-                      keyboardType: TextInputType.number,
+                      controller: _analisisController,
                       decoration: const InputDecoration(
-                          labelText: 'Frecuencia (en horas)'),
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          labelText:
+                              'Analisis solicitados (separados por comas)'),
                       onChanged: (value) {
-                        data['frecuencia'] = value;
+                        data['pruebasSolicitadas'] = value;
                       },
                     ),
-                    // Campo para cantidad de días
-                    TextField(
-                      controller: _cantidadDiasController,
-                      keyboardType: TextInputType.number,
-                      decoration:
-                          const InputDecoration(labelText: 'Cantidad de Días'),
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      onChanged: (value) {
-                        data['cantidad_dias'] = value;
-                      },
-                    ),
+
+                    // Campo para frecuencia
+                    // TextField(
+                    //   controller: _frecuenciaController,
+                    //   keyboardType: TextInputType.number,
+                    //   decoration: const InputDecoration(
+                    //       labelText: 'Frecuencia (en horas)'),
+                    //   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    //   onChanged: (value) {
+                    //     data['frecuencia'] = value;
+                    //   },
+                    // ),
+                    // // Campo para cantidad de días
+                    // TextField(
+                    //   controller: _cantidadDiasController,
+                    //   keyboardType: TextInputType.number,
+                    //   decoration:
+                    //       const InputDecoration(labelText: 'Cantidad de Días'),
+                    //   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    //   onChanged: (value) {
+                    //     data['cantidad_dias'] = value;
+                    //   },
+                    // ),
+
                     const SizedBox(height: 20),
                     // Botón para guardar datos
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         TextButton.icon(
-                          icon: Icon(Icons.image),
-                          onPressed: _pickImage,
-                          label: const Text('Imagen'),
-                        ),
+                            icon: Icon(Icons.image),
+                            onPressed: _pickImage,
+                            label: const Text('Imagen')),
                         SizedBox(
                           child: ElevatedButton(
                             onPressed: agregarIndicacion,
@@ -245,13 +296,10 @@ class _DetailCitaState extends State<DetailCita> {
                                     fontWeight: FontWeight.bold)),
                             style: ButtonStyle(
                               backgroundColor: MaterialStateColor.resolveWith(
-                                (states) => darkTeal,
-                              ),
+                                  (states) => darkTeal),
                               shape: MaterialStateProperty.resolveWith(
-                                (states) => RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.zero,
-                                ),
-                              ),
+                                  (states) => RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.zero)),
                             ),
                           ),
                         ),
@@ -268,3 +316,31 @@ class _DetailCitaState extends State<DetailCita> {
     await Future.delayed(const Duration(seconds: 2));
   }
 }
+
+
+
+
+// Map<String, dynamic> historialMedico = {
+//   'usuarioId': currentUsuario?.usuarioId,
+//   'nombre': currentUsuario?.nombre,
+//   'edad': currentUsuario?.edad,
+//   'sexo': currentUsuario?.sexo,
+//   'motivoConsulta': _motivoConsultaController.text,
+//   'doctor_id': widget.cita!.doctorId,
+//   'antecedentes': {
+//     'enfermedadesPrevias': 'Ninguna',
+//     'medicacionActual': 'Naproxeno 500 mg',
+//   },
+//   'examenFisico': {
+//     'presionArterial': '120/80 mmHg',
+//     'temperatura': '36.5°C',
+//     'frecuenciaCardiaca': '75 lpm',
+//   },
+//   'diagnostico': 'Cefalea tensional',
+//   'tratamiento': 'Analgésicos y descanso',
+//   'seguimiento': 'Control en 2 semanas',
+//   'pruebasSolicitadas': [
+//     'Hemograma completo',
+//     'Radiografía de tórax',
+//   ],
+// };

@@ -20,6 +20,7 @@ class Receta {
   String? statu;
   String? usuarioId;
   String? id;
+  String? citaId;
 
   Receta({
     this.cantidadDias,
@@ -36,6 +37,7 @@ class Receta {
     this.resultado,
     this.statu,
     this.usuarioId,
+    this.citaId,
     this.id,
   });
 
@@ -54,6 +56,7 @@ class Receta {
         resultado: json["resultado"],
         statu: json["statu"],
         usuarioId: json["usuario_id"],
+        citaId: json['citaId'],
         id: id,
       );
 
@@ -72,6 +75,7 @@ class Receta {
         "resultado": resultado,
         "statu": statu,
         "usuario_id": usuarioId,
+        "citaId": citaId,
         "id": id,
       };
 }

@@ -157,10 +157,22 @@ class _ScreenProfilesState extends State<ScreenProfiles> {
                 children: [
                   Text('Nombre : ${current?.displayName ?? 'No disponible'}'),
                   Text('Email: ${current?.email ?? 'No disponible'}'),
+                  Text(
+                      'Ocupación : ${currentUsuario?.ocupacion ?? 'No disponible'}'),
+                  Text(
+                      'Direccion : ${currentUsuario?.direccion ?? 'No disponible'}'),
+                  Text(
+                      'Telefono : ${currentUsuario?.telefono ?? 'No disponible'}'),
+                  Text('Sexo : ${currentUsuario?.sexo ?? 'No disponible'}'),
+                  Text(
+                      'Estado Civil : ${currentUsuario?.estadoCivil ?? 'No disponible'}'),
                 ],
               ),
             ),
             const SizedBox(height: 10),
+            Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Divider(color: Colors.black38)),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Text("Last sesión", style: fontTitle),
@@ -194,14 +206,14 @@ class _ScreenProfilesState extends State<ScreenProfiles> {
                 ],
               ),
             ),
-            TextButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AddDoctorRegister()));
-                },
-                child: Text('Registrar doctor')),
+            // TextButton(
+            //     onPressed: () {
+            //       Navigator.push(
+            //           context,
+            //           MaterialPageRoute(
+            //               builder: (context) => AddDoctorRegister()));
+            //     },
+            //     child: Text('Registrar doctor')),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

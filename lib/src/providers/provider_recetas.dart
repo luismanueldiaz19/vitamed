@@ -1,47 +1,27 @@
 // import 'dart:convert';
 
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import '../models/receta.dart';
 import '../services/auth_service.dart';
-// import 'package:vitamed/src/models/doctor.dart';
 
 class ProviderRecetas extends ChangeNotifier {
-  // final DatabaseReference _database = FirebaseDatabase.instance.ref();
-// List<Doctor> _doctorList = [];
+
   List<Receta> _ListReceta = [];
   final AuthService _authService = AuthService();
 
-//  List<Map<dynamic, dynamic>>  doctorList => get _doctorList;
 
   List<Receta> get listReceta => _ListReceta;
-  // final _fire = FirebaseFireestores.instance;
 
   final DatabaseReference _recetasRef =
       FirebaseDatabase.instance.ref().child('recetas');
 
-  // final DatabaseReference _recetasRef =
-  //     FirebaseDatabase.instance.ref().child('recetas');
-
-  Future<void> addRecetas(Map<String, dynamic> doctor) async {
-    try {
-      // Utiliza la referencia `doctorsRef` para agregar un nuevo doctor con ID único
-      await _recetasRef.push().set(doctor);
-      print("Recetas added successfully!");
-      fetchRecet();
-    } catch (error) {
-      print("Failed to add doctor: $error");
-    }
-  }
+ 
 
   Future<void> fetchRecet() async {
-    debugPrint('fetchRecetas para usuario ${_authService.currentUser!.uid}');
-
-    // Referencia al nodo de recetas
-    final DatabaseReference recetasRef =
-        FirebaseDatabase.instance.ref().child('recetas');
+  
+    final DatabaseReference recetasRef = FirebaseDatabase.instance.ref().child('recetas');
 
     // Consulta para buscar recetas del usuario específico
     final Query query = recetasRef
@@ -100,14 +80,13 @@ class ProviderRecetas extends ChangeNotifier {
 
   Future<void> updateRecetaStatus(String recetaId) async {
     try {
-      // Referencia al nodo específico de la receta
       final DatabaseReference recetaRef = FirebaseDatabase.instance.ref().child('recetas').child(recetaId);
+      await recetaRef.update({'statu': 'terminado'});
 
-      // Realizar la actualización del estado
-      await recetaRef.update({
-        'statu': 'terminado',
-      });
 
+// receta_id
+ 
+       
       print(
           'Estado actualizado a "terminado" para la receta con ID: $recetaId');
       await fetchRecet();

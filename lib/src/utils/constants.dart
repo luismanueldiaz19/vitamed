@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vitamed/src/models/usuario.dart';
 
 // import '../models/empresa_local.dart';
 
@@ -22,7 +23,7 @@ const String logoApp = 'assets/icon/logo_vitamed.jpg';
 const double kwidth = 250;
 
 String firmaLu = 'imagen/logo_lu.png';
-
+Usuario? currentUsuario;
 List<String> estadoPrestamo = ['pendiente', 'pagado', 'vencido'];
 List<String> modoPagoPrestamo = ['semanal', 'quincenal', 'mensual'];
 

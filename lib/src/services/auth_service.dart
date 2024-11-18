@@ -1,8 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:vitamed/src/models/usuario.dart';
 
+import '../utils/constants.dart';
 import 'preferences_service.dart';
 
 class AuthService {
@@ -11,16 +15,18 @@ class AuthService {
 
   final PreferencesService _preferencesService = PreferencesService();
   User? get currentUser => _auth.currentUser;
-
+  final DatabaseReference _usuarioRef =
+      FirebaseDatabase.instance.ref().child('usuarios');
   Future<String?> registerWithEmailAndPassword(String email, String password,
-      {String? displayName, String? phoneNumber}) async {
+      {String? displayName,
+      String? phoneNumber,
+      Map<String, dynamic>? userData}) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
       User? user = result.user;
-      // Verificar que el usuario no sea nulo antes de continuar
       // Verificar que el usuario no sea nulo antes de continuar
       if (user != null) {
         // Actualizar el perfil del usuario con displayName y phoneNumber
@@ -32,11 +38,17 @@ class AuthService {
           // Implementa tu lógica de almacenamiento aquí,
           // await user.updatePhoneNumber(phoneNumber : displayName);
         }
-
         // Guarda el ID del usuario en SharedPreferences
         await _preferencesService.saveUserId(user.uid);
+
+        userData?['usuarioId'] = user.uid.toString();
+        currentUsuario = Usuario.fromJson(userData!);
+        await _preferencesService.saveUsuarioLocal(json.encode(userData));
+        await _usuarioRef.push().set(userData);
         return "success"; // Retornar éxito
       }
+      //HSOnwY3MOEWL3p6Ilmg6E4G6wRt2
+      //HSOnwY3MOEWL3p6Ilmg6E4G6wRt2
       return null;
     } on FirebaseAuthException catch (e) {
       return e
@@ -65,9 +77,33 @@ class AuthService {
       User? user = result.user;
 
       if (user != null) {
-        await _preferencesService
-            .saveUserId(user.uid); // Guardar ID del usuario
-        return "success";
+        final DatabaseReference usuariosRef =
+            FirebaseDatabase.instance.ref().child('usuarios');
+
+        // Consulta para buscar los datos del usuario
+        final Query query =
+            usuariosRef.orderByChild('usuarioId').equalTo(user.uid);
+
+        final DatabaseEvent event = await query.once();
+
+        final snapshot = event.snapshot;
+
+        if (snapshot.value != null) {
+          print(snapshot.value);
+          final Map<String, dynamic> data =
+              Map<String, dynamic>.from(snapshot.value as Map);
+          // Aquí asumimos que la clave del nodo del usuario es desconocida, por eso usamos `data.values.first`
+          final Map<String, dynamic> usuarioData =
+              Map<String, dynamic>.from(data.values.first);
+          // Mapear datos a la clase Usuario
+          currentUsuario = Usuario.fromJson(usuarioData);
+          await _preferencesService.saveUserId(user.uid);
+          await _preferencesService
+              .saveUsuarioLocal(json.encode(currentUsuario));
+          return "success";
+        } else {
+          return null;
+        }
       }
       return null;
     } on FirebaseAuthException catch (e) {
@@ -81,6 +117,7 @@ class AuthService {
   Future<void> signOut() async {
     await _auth.signOut();
     await _preferencesService.clearUserId();
+    await _preferencesService.clearUsuario();
   }
 
   // Verificar si el usuario está autenticado
@@ -91,6 +128,11 @@ class AuthService {
   // Método para obtener el ID del usuario guardado
   Future<String?> getUserId() async {
     return await _preferencesService.getUserId();
+  }
+
+  // Método para obtener el ID del usuario guardado
+  Future<String?> getUsuario() async {
+    return await _preferencesService.getUsuario();
   }
 
   Future<String?> updateProfileImage(File image) async {

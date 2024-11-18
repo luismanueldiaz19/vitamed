@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:vitamed/src/providers/provider_citas.dart';
+
 import 'package:vitamed/src/screens/folder_profile/screen_profiles.dart';
 import 'package:vitamed/src/screens/folder_recetas/screen_recetas.dart';
 import 'package:vitamed/src/screens/folder_screen_main/home_screen.dart';
 
+import '../../permission/permission_device.dart';
+
+import '../../services/push_notification_services.dart';
 import '../folder_screen_doctors/screen_doctor_main.dart';
 
 class PageNavigatorScreen extends StatefulWidget {
@@ -30,6 +32,23 @@ class _PageNavigatorScreenState extends State<PageNavigatorScreen> {
     setState(() {
       _currentIndex = index;
     });
+  }
+
+  inicialNotificacion() async {
+    PermissionMethonds permissionMethonds = PermissionMethonds();
+    await permissionMethonds.askPermissionNotificacion();
+    PushNotificationServices pushNotificationServices =
+        PushNotificationServices();
+
+    pushNotificationServices.generationDeviceRecognitionToken();
+    pushNotificationServices.startListenForNewNotificacion(context);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    inicialNotificacion();
   }
 
   @override

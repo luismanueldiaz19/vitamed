@@ -5,6 +5,7 @@ import 'package:vitamed/src/utils/helpers.dart';
 import 'package:vitamed/src/widgets/validar_screen_available.dart';
 
 import '../services/auth_service.dart';
+import '../services/push_notification_services.dart';
 import '../utils/constants.dart';
 import 'splash_screen.dart';
 // import 'package:vitamed/src/screens/folder_screen_main/home_screen.dart';
@@ -26,6 +27,26 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _displayNameController = TextEditingController();
+
+  // ----------------------------------------------------------------------
+
+  final TextEditingController _ocupacionController = TextEditingController();
+  final TextEditingController _direccionController = TextEditingController();
+  final TextEditingController _telefonoController = TextEditingController();
+  TextEditingController _ageController = TextEditingController();
+
+  String? selectedGender = 'Masculino';
+
+  String? selectedStatus =
+      'Soltero'; // Variable para guardar el estado civil seleccionado
+  final List<String> civilStatuses = [
+    'Soltero',
+    'Casado',
+    'Divorciado',
+    'Viudo',
+    'Unión libre'
+  ]; // Lista de opciones
+
   bool _isSignIn = true;
   bool _isLoading = false;
   Future<void> _signIn() async {
@@ -64,8 +85,12 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _register() async {
     if (_emailController.text.isEmpty ||
         _passwordController.text.isEmpty ||
-        _displayNameController.text.isEmpty) {
-      _showMessage("Please fill in all fields");
+        _displayNameController.text.isEmpty ||
+        _ocupacionController.text.isEmpty ||
+        _direccionController.text.isEmpty ||
+        _telefonoController.text.isEmpty ||
+        _ageController.text.isEmpty) {
+      _showMessage("Por favor, rellene todos los campos");
       return;
     }
 
@@ -73,11 +98,25 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = true;
     });
 
+    // Map the user data from the form fields
+    final Map<String, dynamic> userData = {
+      'nombre': _displayNameController.text.trim(),
+      'edad': _ageController.text.trim(),
+      'sexo': selectedGender,
+      'estadoCivil': selectedStatus?.trim(),
+      'ocupacion': _ocupacionController.text.trim(),
+      'direccion': _direccionController.text.trim(),
+      'telefono': _telefonoController.text.trim(),
+      'email': _emailController.text.toLowerCase().trim(),
+      'device_token': 'n/a',
+    };
+
     // Llamada al servicio de registro
     final result = await _authService.registerWithEmailAndPassword(
       _emailController.text.trim(),
       _passwordController.text.trim(),
       displayName: _displayNameController.text.trim(),
+      userData: userData,
     );
 
     setState(() {
@@ -85,6 +124,12 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     if (result == "success") {
+      // PushNotificationServices pushNotificationServices =
+      //     PushNotificationServices();
+
+      // pushNotificationServices.sendNotificationToTopic(
+      //     '¡Nuevo Registro!', 'Mr/Mis : ${_displayNameController.text.trim()}');
+
       // Navegar a la pantalla de bienvenida o dashboard
       Navigator.pushAndRemoveUntil(
         context,
@@ -93,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     } else {
       // Mostrar mensaje de error
-      _showMessage(result ?? "An unknown error occurred");
+      _showMessage(result ?? "Se ha producido un error desconocido");
     }
   }
 
@@ -101,7 +146,9 @@ class _LoginScreenState extends State<LoginScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Registration Error"),
+        title: const Text("Error de registro",
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
         content: Text(message),
         actions: [
           TextButton(
@@ -185,15 +232,123 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         const SizedBox(height: 10),
                         if (!_isSignIn)
-                          SlideInRight(
-                            curve: Curves.elasticInOut,
-                            child: SizedBox(
-                              width: double.infinity,
-                              child: CustomTextField(
-                                  controller: _displayNameController,
-                                  labelText: 'Full Name',
-                                  icon: Icons.email),
-                            ),
+                          Column(
+                            children: [
+                              SlideInRight(
+                                curve: Curves.elasticInOut,
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: CustomTextField(
+                                      controller: _displayNameController,
+                                      labelText: 'Full Name',
+                                      icon: Icons.person),
+                                ),
+                              ),
+                              SlideInLeft(
+                                curve: Curves.elasticInOut,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Radio<String>(
+                                          value: "Femenino",
+                                          groupValue: selectedGender,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              selectedGender = value;
+                                            });
+                                          },
+                                        ),
+                                        const Text("Femenino"),
+                                      ],
+                                    ),
+                                    const SizedBox(width: 20),
+                                    Row(
+                                      children: [
+                                        Radio<String>(
+                                          value: "Masculino",
+                                          groupValue: selectedGender,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              selectedGender = value;
+                                            });
+                                          },
+                                        ),
+                                        const Text("Masculino"),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SlideInRight(
+                                curve: Curves.elasticInOut,
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: CustomTextField(
+                                      controller: _ageController,
+                                      labelText: 'Edad',
+                                      icon: Icons.e_mobiledata,
+                                      textInputType: TextInputType.number),
+                                ),
+                              ),
+                              SlideInLeft(
+                                curve: Curves.elasticInOut,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 25),
+                                  child: SizedBox(
+                                    height: 45,
+                                    child: DropdownButton<String>(
+                                      value: selectedStatus,
+                                      hint: const Text(
+                                          "Seleccione su estado civil"),
+                                      isExpanded: true,
+                                      items: civilStatuses.map((status) {
+                                        return DropdownMenuItem<String>(
+                                          value: status,
+                                          child: Text(status),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          selectedStatus = newValue;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SlideInRight(
+                                curve: Curves.elasticInOut,
+                                child: SizedBox(
+                                    width: double.infinity,
+                                    child: CustomTextField(
+                                        controller: _ocupacionController,
+                                        labelText: 'Ocupación',
+                                        icon: Icons.work_history)),
+                              ),
+                              SlideInLeft(
+                                curve: Curves.elasticInOut,
+                                child: SizedBox(
+                                    width: double.infinity,
+                                    child: CustomTextField(
+                                      controller: _direccionController,
+                                      labelText: 'Direccion',
+                                      icon: Icons.location_on_rounded,
+                                    )),
+                              ),
+                              SlideInRight(
+                                curve: Curves.elasticInOut,
+                                child: SizedBox(
+                                    width: double.infinity,
+                                    child: CustomTextField(
+                                        controller: _telefonoController,
+                                        labelText: 'Telefono',
+                                        textInputType: TextInputType.phone,
+                                        icon: Icons.phone)),
+                              ),
+                            ],
                           ),
 
                         SlideInLeft(
@@ -356,15 +511,132 @@ class _LoginScreenState extends State<LoginScreen> {
                                 children: [
                                   const SizedBox(height: 10),
                                   if (!_isSignIn)
-                                    SlideInRight(
-                                      curve: Curves.elasticInOut,
-                                      child: SizedBox(
-                                        width: double.infinity,
-                                        child: CustomTextField(
-                                            controller: _displayNameController,
-                                            labelText: 'Full Name',
-                                            icon: Icons.email),
-                                      ),
+                                    Column(
+                                      children: [
+                                        SlideInRight(
+                                          curve: Curves.elasticInOut,
+                                          child: SizedBox(
+                                            width: double.infinity,
+                                            child: CustomTextField(
+                                                controller:
+                                                    _displayNameController,
+                                                labelText: 'Full Name',
+                                                icon: Icons.person),
+                                          ),
+                                        ),
+                                        SlideInLeft(
+                                          curve: Curves.elasticInOut,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Radio<String>(
+                                                    value: "Femenino",
+                                                    groupValue: selectedGender,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        selectedGender = value;
+                                                      });
+                                                    },
+                                                  ),
+                                                  const Text("Femenino"),
+                                                ],
+                                              ),
+                                              const SizedBox(width: 20),
+                                              Row(
+                                                children: [
+                                                  Radio<String>(
+                                                    value: "Masculino",
+                                                    groupValue: selectedGender,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        selectedGender = value;
+                                                      });
+                                                    },
+                                                  ),
+                                                  const Text("Masculino"),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SlideInRight(
+                                          curve: Curves.elasticInOut,
+                                          child: SizedBox(
+                                            width: double.infinity,
+                                            child: CustomTextField(
+                                                controller: _ageController,
+                                                labelText: 'Edad',
+                                                icon: Icons.e_mobiledata,
+                                                textInputType:
+                                                    TextInputType.number),
+                                          ),
+                                        ),
+                                        SlideInLeft(
+                                          curve: Curves.elasticInOut,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 25),
+                                            child: SizedBox(
+                                              height: 45,
+                                              child: DropdownButton<String>(
+                                                value: selectedStatus,
+                                                hint: const Text(
+                                                    "Seleccione su estado civil"),
+                                                isExpanded: true,
+                                                items:
+                                                    civilStatuses.map((status) {
+                                                  return DropdownMenuItem<
+                                                      String>(
+                                                    value: status,
+                                                    child: Text(status),
+                                                  );
+                                                }).toList(),
+                                                onChanged: (String? newValue) {
+                                                  setState(() {
+                                                    selectedStatus = newValue;
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SlideInRight(
+                                          curve: Curves.elasticInOut,
+                                          child: SizedBox(
+                                              width: double.infinity,
+                                              child: CustomTextField(
+                                                  controller:
+                                                      _ocupacionController,
+                                                  labelText: 'Ocupación',
+                                                  icon: Icons.work_history)),
+                                        ),
+                                        SlideInLeft(
+                                          curve: Curves.elasticInOut,
+                                          child: SizedBox(
+                                              width: double.infinity,
+                                              child: CustomTextField(
+                                                controller:
+                                                    _direccionController,
+                                                labelText: 'Direccion',
+                                                icon: Icons.location_on_rounded,
+                                              )),
+                                        ),
+                                        SlideInRight(
+                                          curve: Curves.elasticInOut,
+                                          child: SizedBox(
+                                              width: double.infinity,
+                                              child: CustomTextField(
+                                                  controller:
+                                                      _telefonoController,
+                                                  labelText: 'Telefono',
+                                                  textInputType:
+                                                      TextInputType.phone,
+                                                  icon: Icons.phone)),
+                                        ),
+                                      ],
                                     ),
 
                                   SlideInLeft(

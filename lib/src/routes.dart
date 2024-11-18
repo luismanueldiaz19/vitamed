@@ -15,21 +15,11 @@ class Routes {
   // SplashScreen
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case home:
-        return MaterialPageRoute(
-            builder: (_) => const MyHomePage(title: 'Tu Prestamo'));
-      case login:
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
-      case project:
-        return MaterialPageRoute(builder: (_) => MyHomePage(title: 'Vitamed'));
-
-      case splashScreen:
-        return MaterialPageRoute(builder: (_) => SplashScreen());
-      // case profile:
-      //   return MaterialPageRoute(builder: (_) => ProfileScreen());
-      default:
-        return MaterialPageRoute(
-            builder: (_) => const MyHomePage(title: 'Tu Prestamo'));
+      case home: return MaterialPageRoute(builder: (_) => const MyHomePage(title: 'Vitamed'));
+      case login: return MaterialPageRoute(builder: (_) => const LoginScreen());
+      case project: return MaterialPageRoute(builder: (_) => MyHomePage(title: 'Vitamed'));
+      case splashScreen: return MaterialPageRoute(builder: (_) => SplashScreen());
+      default: return MaterialPageRoute(builder: (_) => const MyHomePage(title: 'Vitamed'));
     }
   }
 }
