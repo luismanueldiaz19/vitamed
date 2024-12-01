@@ -4,13 +4,15 @@ import 'package:vitamed/src/utils/constants.dart';
 
 class RecetaCard extends StatelessWidget {
   final Map<String, dynamic> receta;
-
+  bool? isRecord;
   RecetaCard(
       {required this.receta,
       required this.onPressed,
-      required this.onPressedProgramar});
+      required this.onPressedProgramar,
+      this.isRecord = false});
   Function()? onPressed;
   Function()? onPressedProgramar;
+
   @override
   Widget build(BuildContext context) {
     final style = Theme.of(context).textTheme;
@@ -20,7 +22,7 @@ class RecetaCard extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Colors.white, skyAquaLight, darkTeal],
+          colors: [Colors.white, skyAquaLight],
           begin: Alignment.topLeft,
           end: Alignment.bottomCenter,
         ),
@@ -146,44 +148,48 @@ class RecetaCard extends StatelessWidget {
                   icon: Icon(Icons.timer),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 15),
-                child: Container(
-                  height: 30,
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey
-                            .withOpacity(0.5), // Sombra gris semitransparente
-                        spreadRadius: 5, // Extensión de la sombra
-                        blurRadius: 15, // Difuminado de la sombra
-                        offset: Offset(4, 4), // Posición de la sombra (x, y)
-                      ),
-                      BoxShadow(
-                        color: Colors
-                            .white, // Sombra blanca para un efecto elevado
-                        spreadRadius: -3,
-                        blurRadius: 10,
-                        offset: Offset(-3, -3),
-                      ),
-                    ],
-                  ),
-                  child: ElevatedButton(
-                    onPressed: onPressed,
-                    child: Text('Terminar',
-                        style: style.titleSmall?.copyWith(color: Colors.white)),
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.resolveWith(
-                        (states) => RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+              isRecord!
+                  ? const SizedBox()
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: Container(
+                        height: 30,
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(
+                                  0.5), // Sombra gris semitransparente
+                              spreadRadius: 5, // Extensión de la sombra
+                              blurRadius: 15, // Difuminado de la sombra
+                              offset:
+                                  Offset(4, 4), // Posición de la sombra (x, y)
+                            ),
+                            // BoxShadow(
+                            //   color: Colors
+                            //       .white, // Sombra blanca para un efecto elevado
+                            //   spreadRadius: -3,
+                            //   blurRadius: 10,
+                            //   offset: Offset(-3, -3),
+                            // ),
+                          ],
+                        ),
+                        child: ElevatedButton(
+                          onPressed: onPressed,
+                          child: Text('Terminar',
+                              style: style.titleSmall
+                                  ?.copyWith(color: Colors.white)),
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.resolveWith(
+                              (states) => RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            backgroundColor: MaterialStateProperty.resolveWith(
+                                (states) => Colors.red),
+                          ),
                         ),
                       ),
-                      backgroundColor: MaterialStateProperty.resolveWith(
-                          (states) => Colors.red),
                     ),
-                  ),
-                ),
-              ),
             ],
           )
         ],

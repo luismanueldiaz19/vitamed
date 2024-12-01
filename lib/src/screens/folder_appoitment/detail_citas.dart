@@ -1,10 +1,16 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:vitamed/src/widgets/loading.dart';
 import 'dart:io';
+import '../../../main.dart';
 import '../../models/cita.dart';
+import '../../services/notification_service.dart';
 import '../../utils/constants.dart';
 import '../folder_screen_main/page_navigator_screen.dart';
 
@@ -187,28 +193,39 @@ class _DetailCitaState extends State<DetailCita> {
       'seguimiento': 'Aun no publicado',
     };
     await _recetaRef.push().set(data);
+
     await _historialMedicoRef.push().set(historialMedico);
 
     print("Doctor added successfully!"); // Realizar la actualización del estado
     await recetaRef.update({'is_availablre': false});
+
+    // Crear el mensaje de la notificación personalizada
+    String notificationBody =
+        'Dr. ${widget.cita!.nameDoctor} te ha dejado una nueva indicación médica:\n'
+        '${_indicacionesController.text}\n'
+        'Especialidad: ${widget.cita!.especialidad}\n'
+        'Fecha de la cita: ${widget.cita!.date}\n'
+        'Recuerda seguir las indicaciones para tu tratamiento.';
+    await NotificationService.showNotificacion(
+      title: 'Nueva indicación médica de ${widget.cita!.nameDoctor}',
+      body: notificationBody,
+      summary: '¡Consulta las indicaciones de tu tratamiento!',
+      notificationLayout: NotificationLayout.Messaging,
+    );
 
     await esperar();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => PageNavigatorScreen()),
     );
-    // setState(() {
-    //   isLoading = !isLoading;
-    // });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: const Text('Detalles de la cita'),
-      ),
+          backgroundColor: Colors.transparent,
+          title: const Text('Detalles de la cita')),
       body: isLoading
           ? LoadingCustom(
               text: 'Registrando Indicación',
@@ -316,31 +333,3 @@ class _DetailCitaState extends State<DetailCita> {
     await Future.delayed(const Duration(seconds: 2));
   }
 }
-
-
-
-
-// Map<String, dynamic> historialMedico = {
-//   'usuarioId': currentUsuario?.usuarioId,
-//   'nombre': currentUsuario?.nombre,
-//   'edad': currentUsuario?.edad,
-//   'sexo': currentUsuario?.sexo,
-//   'motivoConsulta': _motivoConsultaController.text,
-//   'doctor_id': widget.cita!.doctorId,
-//   'antecedentes': {
-//     'enfermedadesPrevias': 'Ninguna',
-//     'medicacionActual': 'Naproxeno 500 mg',
-//   },
-//   'examenFisico': {
-//     'presionArterial': '120/80 mmHg',
-//     'temperatura': '36.5°C',
-//     'frecuenciaCardiaca': '75 lpm',
-//   },
-//   'diagnostico': 'Cefalea tensional',
-//   'tratamiento': 'Analgésicos y descanso',
-//   'seguimiento': 'Control en 2 semanas',
-//   'pruebasSolicitadas': [
-//     'Hemograma completo',
-//     'Radiografía de tórax',
-//   ],
-// };

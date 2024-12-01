@@ -59,6 +59,7 @@ class _DialogViewRecetaState extends State<DialogViewReceta> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: _ListReceta.map(
               (item) => RecetaCard(
+                isRecord: true,
                 onPressedProgramar: () {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text('Accion no permitida desde aqui'),

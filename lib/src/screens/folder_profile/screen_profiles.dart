@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vitamed/src/screens/folder_screen_doctors/add_doctor_register.dart';
+import 'package:vitamed/src/screens/folder_screen_doctors/editar_doctor.dart';
 import 'package:vitamed/src/screens/splash_screen.dart';
 import 'package:vitamed/src/utils/helpers.dart';
 
@@ -85,15 +87,6 @@ class _ScreenProfilesState extends State<ScreenProfiles> {
     User? current = _auth.currentUser;
     final style = Theme.of(context).textTheme;
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Perfil'),
-      //   actions: [
-      //     IconButton(
-      //       icon: const Icon(Icons.logout),
-      //       onPressed: _signOut,
-      //     ),
-      //   ],
-      // ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,6 +182,40 @@ class _ScreenProfilesState extends State<ScreenProfiles> {
                 ],
               ),
             ),
+            StreamBuilder<bool>(
+              stream: availableStream,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SizedBox(); // Mostramos un widget vacío mientras se espera
+                } else if (snapshot.hasError) {
+                  return const SizedBox(); // Mostramos un widget vacío si hay error
+                } else if (!snapshot.hasData || snapshot.data == false) {
+                  return const SizedBox(); // No mostrar nada si el valor es false o nulo
+                }
+                // Si el valor es true, mostramos el botón
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                  child: Container(
+                    height: 35,
+                    decoration: BoxDecoration(color: Colors.red),
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EditarDoctor()),
+                        );
+                      },
+                      child: const Text(
+                        'Cambiar foto a Doctores',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
               child: Row(
@@ -206,14 +233,6 @@ class _ScreenProfilesState extends State<ScreenProfiles> {
                 ],
               ),
             ),
-            // TextButton(
-            //     onPressed: () {
-            //       Navigator.push(
-            //           context,
-            //           MaterialPageRoute(
-            //               builder: (context) => AddDoctorRegister()));
-            //     },
-            //     child: Text('Registrar doctor')),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -225,4 +244,23 @@ class _ScreenProfilesState extends State<ScreenProfiles> {
       ),
     );
   }
+
+// {
+//   "value": true
+// }
+  // Stream que se suscribe a los cambios en la colección de citas
+  Stream<bool> get availableStream {
+    final DatabaseReference _citasRef =
+        FirebaseDatabase.instance.ref().child('available_edit');
+
+    return _citasRef.onValue.map((event) {
+      // Obtenemos el valor actual de available_edit
+      final data = event.snapshot.value as Map<dynamic, dynamic>? ?? {};
+      // Verificamos si tiene un valor true o false
+      return data['value'] == true; // Cambia 'value' si la clave es diferente
+    });
+  }
 }
+// bool canEditCita(Cita cita) {
+//   return cita.availableEdit;
+// }

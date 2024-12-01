@@ -54,12 +54,7 @@ class DefaultFirebaseOptions {
       storageBucket: "vitamedd.appspot.com",
       messagingSenderId: "356117566040",
       appId: "1:356117566040:web:0504ade43eb6ec2286f02d"
-      // apiKey: 'AIzaSyBUHEHV7EtXHezDywFNGqiS8ggYbB4bMEs',
-      // appId: '1:356117566040:web:0504ade43eb6ec2286f02d',
-      // messagingSenderId: '356117566040',
-      // projectId: 'vitamedd',
-      // authDomain: 'vitamedd.firebaseapp.com',
-      // storageBucket: 'vitamedd.appspot.com',
+  
       );
 
   static const FirebaseOptions android = FirebaseOptions(

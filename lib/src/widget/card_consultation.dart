@@ -24,32 +24,27 @@ class CardConsultation extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       margin: EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.black54), // Borde estilo Outline
-        borderRadius: BorderRadius.circular(10.0),
-      ),
+          border: Border.all(color: Colors.black54), // Borde estilo Outline
+          borderRadius: BorderRadius.circular(10.0)),
       child: Row(
         children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(imageUrl),
-            radius: 30.0,
-          ),
+          CircleAvatar(backgroundImage: NetworkImage(imageUrl), radius: 30.0),
           const SizedBox(width: 16.0),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Tooltip(
-                message: doctorName.toUpperCase(),
-                child: Text(
-                  doctorName.length > 25
-                      ? '${doctorName.substring(0, 25)}...'
-                      : doctorName,
-                  style:
-                      style.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(height: 4.0),
+                  message: doctorName.toUpperCase(),
+                  child: Text(
+                      doctorName.length > 25
+                          ? '${doctorName.substring(0, 25)}...'
+                          : doctorName,
+                      style: style.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.bold))),
               Text(specialty,
-                  style: style.bodySmall?.copyWith(color: Colors.black54)),
+                  style:
+                      style.bodySmall?.copyWith(color: Colors.blue.shade300)),
+              const SizedBox(height: 5),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

@@ -53,8 +53,9 @@ dependencies:
   uuid: ^4.5.1
   firebase_messaging: ^15.1.0
   permission_handler: ^11.3.1
-  flutter_local_notifications: ^18.0.1
-  # http: ^1.2.2
+  # flutter_local_notifications: ^18.0.1
+  awesome_notifications: ^0.9.0
+  # js: ^0.6.4
 
 dev_dependencies:
   flutter_test:

@@ -37,4 +37,23 @@ class ImageUploadService {
       return null;
     }
   }
+
+  /// Subir imagen a Firebase Storage y obtener la URL de descarga
+  Future<String?> uploadImageToDoctor(File image, String userId) async {
+    try {
+      // Crear una referencia única en Firebase Storage para la imagen
+      final ref = _storage.ref().child(
+          'profiles_imagen_doctor/$userId/${DateTime.now().toIso8601String()}');
+
+      // Subir la imagen
+      final uploadTask = ref.putFile(image);
+      await uploadTask;
+
+      // Obtener la URL de descarga
+      return await ref.getDownloadURL();
+    } catch (e) {
+      print("Error al subir la imagen: $e");
+      return null;
+    }
+  }
 }

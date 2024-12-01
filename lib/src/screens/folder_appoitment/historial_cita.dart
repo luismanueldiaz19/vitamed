@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:vitamed/src/screens/folder_appoitment/view_details_historico.dart';
 import 'package:vitamed/src/services/auth_service.dart';
+import 'package:vitamed/src/widgets/validar_screen_available.dart';
 
 import '../../models/cita.dart';
 import '../../widget/card_consultation.dart';
@@ -45,66 +46,68 @@ class _HistorialCitaState extends State<HistorialCita> {
       appBar: AppBar(
           title: const Text('Historial consultas'),
           backgroundColor: Colors.white),
-      body: Column(
-        children: [
-          StreamBuilder<List<Cita>>(
-            stream: citasStream,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error al cargar las citas.'));
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Expanded(
-                  child: Center(
-                    child: LoadingCustom(
-                      text: 'No hay citas disponibles.',
-                      image: 'assets/imagen/wired.gif',
+      body: ValidarScreenAvailable(
+        mobile: Column(
+          children: [
+            StreamBuilder<List<Cita>>(
+              stream: citasStream,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error al cargar las citas.'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Expanded(
+                    child: Center(
+                      child: LoadingCustom(
+                        text: 'No hay citas disponibles.',
+                        image: 'assets/imagen/wired.gif',
+                      ),
                     ),
+                  );
+                }
+
+                final citas = snapshot.data!;
+
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: citas.length,
+                    itemBuilder: (context, index) {
+                      Cita cita = citas[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 1),
+                        child: CardConsultationFinal(
+                          cita: cita,
+                          imageUrl: urlDocto,
+                          appointmentDate: cita.date ?? 'Fecha no especificada',
+                          appointmentTime: cita.hour ?? 'Hora no especificada',
+                          doctorName: cita.nameDoctor ?? 'Doctor Desconocido',
+                          specialty:
+                              cita.especialidad ?? 'Especialidades Desconocido',
+                        ),
+                      );
+
+                      //  ListTile(
+                      //   leading: cita.imageProfileDoctor != null
+                      //       ? CircleAvatar(
+                      //           backgroundImage:
+                      //               NetworkImage(cita.imageProfileDoctor!),
+                      //         )
+                      //       : CircleAvatar(child: Icon(Icons.person)),
+                      //   title: Text(cita.nameDoctor ?? 'Doctor Desconocido'),
+                      //   subtitle: Text(cita.date ?? 'Fecha no especificada'),
+                      //   trailing: Text(cita.hour ?? 'Hora no especificada'),
+                      //   onTap: () {
+                      //     // Maneja la acción al tocar en una cita
+                      //   },
+                      // );
+                    },
                   ),
                 );
-              }
-
-              final citas = snapshot.data!;
-
-              return Expanded(
-                child: ListView.builder(
-                  itemCount: citas.length,
-                  itemBuilder: (context, index) {
-                    Cita cita = citas[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 1),
-                      child: CardConsultationFinal(
-                        cita: cita,
-                        imageUrl: urlDocto,
-                        appointmentDate: cita.date ?? 'Fecha no especificada',
-                        appointmentTime: cita.hour ?? 'Hora no especificada',
-                        doctorName: cita.nameDoctor ?? 'Doctor Desconocido',
-                        specialty:
-                            cita.especialidad ?? 'Especialidades Desconocido',
-                      ),
-                    );
-
-                    //  ListTile(
-                    //   leading: cita.imageProfileDoctor != null
-                    //       ? CircleAvatar(
-                    //           backgroundImage:
-                    //               NetworkImage(cita.imageProfileDoctor!),
-                    //         )
-                    //       : CircleAvatar(child: Icon(Icons.person)),
-                    //   title: Text(cita.nameDoctor ?? 'Doctor Desconocido'),
-                    //   subtitle: Text(cita.date ?? 'Fecha no especificada'),
-                    //   trailing: Text(cita.hour ?? 'Hora no especificada'),
-                    //   onTap: () {
-                    //     // Maneja la acción al tocar en una cita
-                    //   },
-                    // );
-                  },
-                ),
-              );
-            },
-          ),
-        ],
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

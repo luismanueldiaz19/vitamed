@@ -1,21 +1,33 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'package:vitamed/src/permission/permission_device.dart';
 import 'package:vitamed/src/providers/provider_citas.dart';
 import 'package:vitamed/src/providers/provider_usuario.dart';
 import 'package:vitamed/src/screens/splash_screen.dart';
+import 'package:vitamed/src/services/notification_service.dart';
 import 'firebase_options.dart';
 import 'src/providers/provider_doctor.dart';
 import 'src/providers/provider_recetas.dart';
 import 'src/services/firebase_api.dart';
 import 'src/utils/constants.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+//     FlutterLocalNotificationsPlugin();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseApi().initNotifications();
+  await NotificationService.initNotifi();
 
+  // const AndroidInitializationSettings initializationSettingsAndroid =
+  //     AndroidInitializationSettings('@mipmap/ic_launcher');
+  // const InitializationSettings initializationSettings =
+  //     InitializationSettings(android: initializationSettingsAndroid);
+
+  // await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  await FirebaseMessaging.instance.setAutoInitEnabled(true);
   runApp(
     MultiProvider(
       providers: [
@@ -80,3 +92,69 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+  // ElevatedButton(
+  //             onPressed: () async {
+  //               await NotificationService.showNotificacion(
+  //                   title: 'Titulo de notificacion',
+  //                   body: 'Body de la notificaciones ');
+  //             },
+  //             child: Text('Normal Notificacion'),
+  //           ),
+  //           ElevatedButton(
+  //             onPressed: () async {
+  //               await NotificationService.showNotificacion(
+  //                 title: 'Titulo de notificacion',
+  //                 body: 'Body de la notificaciones',
+  //                 summary: 'Small Summary',
+  //                 notificationLayout: NotificationLayout.Inbox,
+  //               );
+  //             },
+  //             child: Text('Notificacion sumary'),
+  //           ),
+  //           ElevatedButton(
+  //             onPressed: () async {
+  //               await NotificationService.showNotificacion(
+  //                 title: 'Titulo de notificacion',
+  //                 body: 'Body de la notificaciones',
+  //                 summary: 'Small Summary',
+  //                 notificationLayout: NotificationLayout.Messaging,
+  //               );
+  //             },
+  //             child: Text('Notificacion Mensaje'),
+  //           ),
+  //           ElevatedButton(
+  //             onPressed: () async {
+  //               await NotificationService.showNotificacion(
+  //                 title: 'Titulo de notificacion',
+  //                 body: 'Body de la notificaciones',
+  //                 summary: 'Small Summary',
+  //                 notificationLayout: NotificationLayout.Messaging,
+  //                 scheduled: true,
+  //                 interval: 5,
+  //               );
+  //             },
+  //             child: Text('Notificacion Scheduled'),
+  //           ),
+  //           ElevatedButton(
+  //             onPressed: () async {
+  //               await NotificationService.showNotificacion(
+  //                   title: 'Titulo de notificacion',
+  //                   body: 'Body de la notificaciones',
+  //                   payload: {
+  //                     'navigate': 'true'
+  //                   },
+  //                   actionButtons: [
+  //                     NotificationActionButton(
+  //                       key: 'Check',
+  //                       label: 'Check it out',
+  //                       actionType: ActionType.SilentAction,
+  //                       color: Colors.green,
+  //                     )
+  //                   ]);
+  //             },
+  //             child: Text('Action Notificacion'),
+  //           ),
+         
+         

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:animate_do/animate_do.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:vitamed/src/widgets/validar_screen_available.dart';
 
 import '../../models/cita.dart';
 import '../../models/historico.dart';
@@ -63,17 +64,19 @@ class _ViewDetailsHistoricoState extends State<ViewDetailsHistorico> {
       appBar: AppBar(
           title: const Text('Proceso de consulta'),
           backgroundColor: Colors.white),
-      body: ListView.builder(
-        itemCount: _doctorList.length,
-        itemBuilder: (BuildContext context, int index) {
-          Historico item = _doctorList[index];
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-            child: ZoomIn(
-                curve: Curves.elasticInOut,
-                child: CardHistoricoRecord(historico: item)),
-          );
-        },
+      body: ValidarScreenAvailable(
+        mobile: ListView.builder(
+          itemCount: _doctorList.length,
+          itemBuilder: (BuildContext context, int index) {
+            Historico item = _doctorList[index];
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              child: ZoomIn(
+                  curve: Curves.elasticInOut,
+                  child: CardHistoricoRecord(historico: item)),
+            );
+          },
+        ),
       ),
     );
   }

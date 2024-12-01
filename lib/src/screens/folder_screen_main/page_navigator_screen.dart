@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:vitamed/src/screens/folder_profile/screen_profiles.dart';
 import 'package:vitamed/src/screens/folder_recetas/screen_recetas.dart';
 import 'package:vitamed/src/screens/folder_screen_main/home_screen.dart';
+import 'package:vitamed/src/widgets/validar_screen_available.dart';
 
 import '../../permission/permission_device.dart';
 
@@ -22,7 +23,7 @@ class _PageNavigatorScreenState extends State<PageNavigatorScreen> {
   // Lista de widgets para las diferentes pestañas
   final List<Widget> _pages = [
     MyHomePage(title: 'Vitamed'),
-    ScreenDoctorMain(),
+    ScreenDoctorMain(), 
     ScreenRecetas(),
     ScreenProfiles(),
   ];
@@ -54,8 +55,9 @@ class _PageNavigatorScreenState extends State<PageNavigatorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[
-          _currentIndex], // Muestra el contenido de la pestaña seleccionada
+      body: ValidarScreenAvailable(
+        mobile: _pages[_currentIndex],
+      ), // Muestra el contenido de la pestaña seleccionada
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onTabTapped,

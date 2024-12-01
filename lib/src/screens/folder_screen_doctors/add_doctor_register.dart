@@ -32,7 +32,7 @@ class _AddDoctorRegisterState extends State<AddDoctorRegister> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add Doctor"),
+        title: Text("Agregar Doctor"),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -100,7 +100,8 @@ class _AddDoctorRegisterState extends State<AddDoctorRegister> {
         "image_profile": imageUrl,
         "informacion": informacionController.text,
         "is_favorite": isFavorite,
-        "seguros": segurosController.text.split(',').map((e) => e.trim()).toList(),
+        "seguros":
+            segurosController.text.split(',').map((e) => e.trim()).toList(),
         "star": 2.3,
         "telefono": telefonoController.text
       };

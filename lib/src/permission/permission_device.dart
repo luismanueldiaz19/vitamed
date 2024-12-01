@@ -9,5 +9,12 @@ class PermissionMethonds {
         print('YA TIENE PERMISO PARA RECIBIR NOTIFICACIONES');
       }
     });
+    await Permission.camera.isDenied.then((value) {
+      if (value) {
+        Permission.camera.request();
+      } else {
+        print('YA TIENE PERMISO PARA CAMARA');
+      }
+    });
   }
 }

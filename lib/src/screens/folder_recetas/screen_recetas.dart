@@ -1,7 +1,9 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vitamed/src/providers/provider_usuario.dart';
 import 'package:vitamed/src/widgets/loading.dart';
+import '../../services/notification_service.dart';
 import '../../utils/constants.dart';
 import '../../models/receta.dart';
 import '../../providers/provider_recetas.dart';
@@ -92,10 +94,19 @@ class _ScreenRecetasState extends State<ScreenRecetas> {
                 ),
               ),
               TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     Provider.of<ProviderRecetas>(context, listen: false)
                         .updateRecetaStatus(recetaId);
-                    Navigator.of(context).pop();
+                    Navigator.of(context)
+                        .pop(); // Crear el mensaje de la notificación personalizada
+                    String notificationBody =
+                        'acaba de finalizar un tratamiento';
+                    await NotificationService.showNotificacion(
+                      title: 'Hasta Luego!, que te mejores',
+                      body: notificationBody,
+                      summary: '¡Finalizaste tu tratamiento!',
+                      notificationLayout: NotificationLayout.Messaging,
+                    );
                   },
                   child:
                       Text('Confirmar', style: TextStyle(color: Colors.green))),
